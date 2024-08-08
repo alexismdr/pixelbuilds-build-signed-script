@@ -31,16 +31,16 @@ clear
 echo "Press ENTER TWICE to skip password (about 10-15 enter hits total). Cannot use a password for inline signing!"
 mkdir ~/.android-certs
 
-for x in bluetooth media networkstack nfc platform releasekey sdk_sandbox shared testkey verifiedboot; do \
+for x in releasekey platform shared media networkstack nfc testkey cyngn-priv-app bluetooth sdk_sandbox verifiedboot; do \
     ./development/tools/make_key ~/.android-certs/$x "$subject"; \
 done
 
 
 ## Create vendor for keys
-mkdir -p vendor/lineage-priv
-mv ~/.android-certs vendor/lineage-priv/keys
-echo "PRODUCT_DEFAULT_DEV_CERTIFICATE := vendor/lineage-priv/keys/releasekey" > vendor/lineage-priv/keys/keys.mk
-cat <<EOF > vendor/lineage-priv/keys/BUILD.bazel
+mkdir -p vendor/pixelbuilds-priv
+mv ~/.android-certs vendor/pixelbuilds-priv/keys
+echo "PRODUCT_DEFAULT_DEV_CERTIFICATE := vendor/pixelbuilds-priv/keys/releasekey" > vendor/pixelbuilds-priv/keys/keys.mk
+cat <<EOF > vendor/pixelbuilds-priv/keys/BUILD.bazel
 filegroup(
     name = "android_certificate_directory",
     srcs = glob([
@@ -51,6 +51,7 @@ filegroup(
 )
 EOF
 
-echo "Done! Now build as usual. If builds aren't being signed, add '-include vendor/lineage-priv/keys/keys.mk' to your device mk file"
-echo "Make copies of your vendor/lineage-priv folder as it contains your keys!"
+echo "Done! Now add '-include vendor/pixelbuilds-priv/keys/keys.mk' to your device mk file"
+echo "Then build as usual!"
+echo "Make copies of your vendor/pixelbuilds-priv folder as it contains your keys!"
 sleep 3
